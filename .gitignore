@@ -5,3 +5,5 @@
 .gitattributes
 .project
 /.settings
+*/.settings
+*/.project
