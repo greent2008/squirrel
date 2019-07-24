@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xijn.squirrel.admin.dao.ISquirrelUserDao">
+
+  <resultMap id="SquirrelUser" type="com.xijn.squirrel.admin.core.model.SquirrelUser" >
+    <result column="id" property="id" />
+    <result column="username" property="userName" />
+    <result column="password" property="password" />
+    <result column="type" property="type" />
+    <result column="permission_biz" property="permissionBiz" />
+    <result column="username_cn" property="userNameCn" />
+    <result column="responsible_for" property="responsibleFor" />
+    <result column="groupname" property="groupName" />
+    <result column="groupname_cn" property="groupNameCn" />
+    <result column="principle" property="principle" />
+    <result column="entry_time" property="entryTime" />
+    <result column="born_time" property="bornTime" />
+    <result column="company" property="company" />
+    <result column="graduate_school" property="graduateSchool" />
+    <result column="edu_background" property="eduBackground" />
+    <result column="working_years" property="workingYears" />
+    <result column="email" property="email" />
+    <result column="mobile_number" property="mobileNumber" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    t.id,
+    t.username,
+    t.password,
+    t.type,
+    t.permission_biz,
+    t.username_cn,
+    t.responsible_for,
+    t.groupname,
+    t.groupname_cn,
+    t.principle,
+    t.entry_time,
+    t.born_time,
+    t.company,
+    t.graduate_school,
+    t.edu_background,
+    t.working_years,
+    t.email,
+    t.mobile_number
+  </sql>
+
+  <insert id="add" parameterType="com.xijn.squirrel.admin.core.model.SquirrelUser" useGeneratedKeys="true" keyProperty="id" >
+    INSERT INTO squirrel_user (
+      username,
+      password,
+      `type`,
+      permission_biz,
+      username_cn,
+      responsible_for,
+      groupname,
+      groupname_cn,
+      principle,
+      entry_time,
+      born_time,
+      company,
+      graduate_school,
+      edu_background,
+      working_years,
+      email,
+      mobile_number
+    ) VALUES (
+      #{userName},
+      #{password},
+      #{type},
+      #{permissionBiz},
+      #{userNameCn},
+      #{responsibleFor},
+      #{groupName},
+      #{groupNameCn},
+      #{principle},
+      #{entryTime},
+      #{bornTime},
+      #{company},
+      #{graduateSchool},
+      #{eduBackground},
+      #{workingYears},
+      #{email},
+      #{mobileNumber}
+    );
+  </insert>
+
+  <update id="update" parameterType="com.xijn.squirrel.admin.core.model.SquirrelUser" >
+    UPDATE squirrel_user
+    SET
+      username = #{userName},
+      password = #{password},
+      `type` = #{type},
+      permission_biz = #{permissionBiz},
+      username_cn = #{userNameCn},
+      responsible_for = #{responsibleFor},
+      groupname = #{groupName},
+      groupname_cn = #{groupNameCn},
+      principle = #{principle},
+      entry_time = #{entryTime},
+      born_time = #{bornTime},
+      company = #{company},
+      graduate_school = #{graduateSchool},
+      edu_background = #{eduBackground},
+      working_years = #{workingYears},
+      email = #{email},
+      mobile_number = #{mobileNumber}
+    WHERE id = #{id}
+  </update>
+
+  <delete id="delete" parameterType="java.lang.Integer" >
+    DELETE FROM squirrel_user
+    WHERE id = #{id}
+  </delete>
+
+  <select id="findByUserName" parameterType="java.lang.String" resultMap="SquirrelUser">
+    SELECT <include refid="Base_Column_List" />
+    FROM squirrel_user AS t
+    WHERE t.username = #{userName}
+  </select>
+
+  <select id="findById" parameterType="java.lang.Integer" resultMap="SquirrelUser">
+    SELECT <include refid="Base_Column_List" />
+    FROM squirrel_user AS t
+    WHERE t.id = #{id}
+  </select>
+
+  <select id="loadAll" parameterType="java.lang.Integer" resultMap="SquirrelUser">
+    SELECT <include refid="Base_Column_List" />
+    FROM squirrel_user AS t
+    ORDER BY id DESC
+  </select>
+
+  <select id="pageList" parameterType="java.util.Map" resultMap="SquirrelUser">
+    SELECT <include refid="Base_Column_List" />
+    FROM squirrel_user AS t
+    <trim prefix="WHERE" prefixOverrides="AND | OR" >
+      <if test="userName != null and userName != ''">
+        AND t.username like CONCAT(CONCAT('%', #{userName}), '%')
+      </if>
+      <if test="groupName != null and groupName != ''">
+        AND t.groupname like CONCAT(CONCAT('%', #{groupName}), '%')
+      </if>
+      <if test="excludeGroupName != null and excludeGroupName != ''">
+        AND t.groupname != #{excludeGroupName}
+      </if>
+      <if test="type gte 0" >
+        AND t.`type` = #{type}
+      </if>
+    </trim>
+    ORDER BY t.username ASC
+    LIMIT #{offset}, #{pageSize}
+  </select>
+
+  <select id="pageListCount" parameterType="java.util.Map" resultType="int">
+    SELECT count(1)
+    FROM squirrel_user AS t
+    <trim prefix="WHERE" prefixOverrides="AND | OR" >
+      <if test="userName != null and userName != ''">
+        AND t.username like CONCAT(CONCAT('%', #{userName}), '%')
+      </if>
+      <if test="groupName != null and groupName != ''">
+        AND t.groupname like CONCAT(CONCAT('%', #{groupName}), '%')
+      </if>
+      <if test="excludeGroupName != null and excludeGroupName != ''">
+        AND t.groupname != #{excludeGroupName}
+      </if>
+      <if test="type gte 0" >
+        AND t.`type` = #{type}
+      </if>
+    </trim>
+    LIMIT #{offset}, #{pageSize}
+  </select>
+
+</mapper>
