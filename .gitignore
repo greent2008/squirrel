@@ -6,6 +6,6 @@
 .project
 /.settings
 /.vscode
-*/.settings/
+**/.settings/
 */.project
 */.classpath
